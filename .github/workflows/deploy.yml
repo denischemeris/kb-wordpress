@@ -1,0 +1,61 @@
+name: Deploy KB Theme
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+    - name: Deploy to server
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        port: 22
+        script: |
+          echo "🚀 Начало деплоя..."
+          
+          # Переход в директорию темы
+          cd ${{ secrets.WP_PATH }}/wp-content/themes/kb-theme
+          
+          # Git pull
+          git pull origin main
+          echo "✅ Код обновлён"
+          
+          # Активация темы (если нужно)
+          wp theme activate kb-theme --allow-root
+          echo "✅ Тема активирована"
+          
+          # Очистка кэша
+          wp cache flush --allow-root
+          echo "✅ Кэш очищен"
+          
+          echo "🎉 Деплой завершён!"
+
+    - name: Notify success (опционально)
+      if: success()
+      run: echo "Деплой успешно завершён!"
+
+    - name: Notify failure
+      if: failure()
+      run: |
+        echo "❌ Деплой не удался!"
+        echo "Проверьте логи GitHub Actions"

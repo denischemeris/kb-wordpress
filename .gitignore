@@ -1,0 +1,34 @@
+# WordPress
+*.log
+*.sql
+wp-config.php
+wp-content/advanced-cache.php
+wp-content/blog-deleted.php
+wp-content/db.php
+wp-content/object-cache.php
+wp-content/sunrise.php
+wp-content/uploads/
+wp-content/debug.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# sensitive
+.env
+*.key
+*.pem
+private_key*
+
+# videos (слишком большие)
+*.mp4
+*.webm
+*.ogg
