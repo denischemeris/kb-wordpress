@@ -13,7 +13,7 @@
         </a>
         <div class="navbar-nav ms-auto">
             <?php if ( is_user_logged_in() ) : ?>
-                <a class="nav-link" href="<?php echo home_url('/knowledge-base/'); ?>">База знаний</a>
+                <a class="nav-link" href="<?php echo home_url('/kb/'); ?>">База знаний</a>
                 <a class="nav-link" href="<?php echo wp_logout_url(home_url('/')); ?>">Выйти</a>
             <?php else : ?>
                 <a class="nav-link" href="<?php echo home_url('/register/'); ?>">Регистрация</a>
