@@ -213,6 +213,77 @@ add_action('template_redirect', function() {
 // 9. КАСТОМНЫЕ ШОРТКОДЫ
 // ============================================================================
 
+// Шорткод для формы входа
+add_shortcode('wp_login_form', function() {
+    if (is_user_logged_in()) {
+        $user = wp_get_current_user();
+        return '<div class="alert alert-success">Вы уже вошли как <strong>' 
+             . esc_html($user->display_name) . '</strong>. '
+             . '<a href="' . wp_logout_url(home_url('/')) . '">Выйти</a></div>';
+    }
+    
+    $redirect = isset($_GET['redirect']) ? esc_url($_GET['redirect']) : home_url('/knowledge-base/');
+    
+    ob_start();
+    ?>
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Вход в систему</h3>
+                    
+                    <?php if (isset($_GET['error'])) : ?>
+                        <div class="alert alert-danger">
+                            Неверный логин или пароль
+                        </div>
+                    <?php endif; ?>
+                    
+                    <form method="post" action="<?php echo esc_url(wp_login_url()); ?>">
+                        <div class="mb-3">
+                            <label for="user_login" class="form-label">Логин или Email</label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="user_login" 
+                                   name="log" 
+                                   required 
+                                   placeholder="Введите логин">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="user_pass" class="form-label">Пароль</label>
+                            <input type="password" 
+                                   class="form-control" 
+                                   id="user_pass" 
+                                   name="pwd" 
+                                   required 
+                                   placeholder="Введите пароль">
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            <input type="hidden" name="redirect_to" value="<?php echo esc_attr($redirect); ?>">
+                            <label class="form-check-label">
+                                <input type="checkbox" name="rememberme" value="forever"> Запомнить меня
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100" name="wp-submit">Войти</button>
+                    </form>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="text-center">
+                        <a href="<?php echo home_url('/register/'); ?>" class="text-decoration-none">
+                            Нет аккаунта? Зарегистрируйтесь
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
+    return ob_get_clean();
+});
+
 // Шорткод для видео с защитой
 add_shortcode('kb_video', function($atts) {
     $atts = shortcode_atts([
