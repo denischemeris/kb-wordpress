@@ -209,10 +209,10 @@ add_action('template_redirect', function() {
     }
 });
 
-// Проверка доступа к статьям БЗ (epkb_post_type_1)
+// Проверка доступа к статьям БЗ (epkb_post_type_1) — только для авторизованных
 add_action('template_redirect', function() {
     if (is_singular('epkb_post_type_1') && !is_user_logged_in()) {
-        wp_redirect('/login/');
+        wp_redirect(wp_login_url($_SERVER['REQUEST_URI']));
         exit;
     }
 });

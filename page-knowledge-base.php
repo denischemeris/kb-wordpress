@@ -1,15 +1,29 @@
 <?php
 /**
  * Шаблон страницы базы знаний
- * 
+ *
  * Template Name: Knowledge Base
  */
 
 get_header();
 
-// Проверка авторизации
+// Проверка авторизации — показываем сообщение вместо редиректа
 if (!is_user_logged_in()) {
-    wp_redirect('/register/');
+    ?>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="alert alert-warning text-center">
+                    <h4>Доступ ограничен</h4>
+                    <p>Для просмотра базы знаний необходимо авторизоваться.</p>
+                    <a href="/login/" class="btn btn-primary">Войти</a>
+                    <a href="/register/" class="btn btn-secondary ms-2">Регистрация</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
+    get_footer();
     exit;
 }
 
