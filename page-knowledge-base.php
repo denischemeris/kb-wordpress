@@ -5,13 +5,26 @@
  * Template Name: Knowledge Base
  */
 
-// Проверка авторизации — если не авторизован, редирект на стандартный логин WordPress
+get_header();
+
+// Проверка авторизации
 if (!is_user_logged_in()) {
-    wp_redirect(wp_login_url($_SERVER['REQUEST_URI']));
+    ?>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="alert alert-warning text-center">
+                    <h4>Доступ ограничен</h4>
+                    <p class="mb-3">Для просмотра базы знаний необходимо авторизоваться.</p>
+                    <a href="<?php echo wp_login_url($_SERVER['REQUEST_URI']); ?>" class="btn btn-primary">Войти</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
+    get_footer();
     exit;
 }
-
-get_header();
 
 $user = wp_get_current_user();
 ?>
