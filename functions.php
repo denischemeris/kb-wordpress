@@ -196,7 +196,7 @@ add_action('wp_enqueue_scripts', function() {
 add_filter('wp_nav_menu_items', function($items, $args) {
     // Если не авторизован — меняем ссылку на БЗ на ссылку на логин
     if (!is_user_logged_in()) {
-        $items = preg_replace('/href=["\']\/knowledge-base\/?[\"\']/i', 'href="/login/"', $items);
+        $items = preg_replace('/href=["\']\/kb\/?[\"\']/i', 'href="/login/"', $items);
     }
     return $items;
 }, 10, 2);
