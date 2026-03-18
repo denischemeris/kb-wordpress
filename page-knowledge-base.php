@@ -29,7 +29,7 @@ if (!is_user_logged_in()) {
 $user = wp_get_current_user();
 ?>
 
-<div class="container py-5">
+<div class="container py-5 kb-protected-content">
     <!-- Заголовок -->
     <div class="row mb-4">
         <div class="col-12">
@@ -38,6 +38,9 @@ $user = wp_get_current_user();
             </h1>
             <p class="text-muted">
                 Добро пожаловать, <?php echo esc_html($user->display_name); ?>!
+                <?php if ($user->user_email) : ?>
+                    <span class="kb-watermark" style="position:fixed; bottom:10px; right:10px; opacity:0.15; font-size:12px;"><?php echo esc_html($user->user_email); ?></span>
+                <?php endif; ?>
             </p>
         </div>
     </div>
@@ -206,3 +209,64 @@ $user = wp_get_current_user();
 </div>
 
 <?php get_footer(); ?>
+
+<!-- Защита от копирования -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Запрет правого клика
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Запрет горячих клавиш
+    document.addEventListener('keydown', function(e) {
+        // Ctrl+C, Ctrl+U, Ctrl+S, Ctrl+P, Ctrl+A, F12, PrintScreen
+        if (e.ctrlKey && ['c', 'u', 's', 'p', 'a'].includes(e.key.toLowerCase())) {
+            e.preventDefault();
+            return false;
+        }
+        if (e.key === 'F12' || e.key === 'PrintScreen') {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    // Размытие при потере фокуса
+    window.addEventListener('blur', function() {
+        document.body.classList.add('blurred');
+    });
+
+    window.addEventListener('focus', function() {
+        document.body.classList.remove('blurred');
+    });
+});
+</script>
+
+<style>
+/* Запрет выделения текста */
+.kb-protected-content {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Размытие при потере фокуса */
+body.blurred .kb-protected-content {
+    filter: blur(10px);
+    transition: filter 0.1s ease;
+}
+
+/* Водяной знак */
+.kb-watermark {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    opacity: 0.15;
+    font-size: 12px;
+    color: #000;
+    pointer-events: none;
+    z-index: 9999;
+}
+</style>
