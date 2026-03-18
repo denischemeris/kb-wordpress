@@ -194,28 +194,12 @@ add_action('wp_enqueue_scripts', function() {
 
 // Убираем ссылку на БЗ из меню для неавторизованных
 add_filter('wp_nav_menu_items', function($items, $args) {
-    // Если не авторизован — убираем ссылку на knowledge-base из всех меню
+    // Если не авторизован — меняем ссылку на БЗ на ссылку на логин
     if (!is_user_logged_in()) {
-        $items = preg_replace('/href=["\']\/knowledge-base\/?[\"\']/i', 'href="/login/?redirect=knowledge-base"', $items);
+        $items = preg_replace('/href=["\']\/knowledge-base\/?[\"\']/i', 'href="/login/"', $items);
     }
     return $items;
 }, 10, 2);
-
-// Редирект с главной на логин для неавторизованных при попытке доступа к БЗ
-add_action('template_redirect', function() {
-    if (is_page('knowledge-base') && !is_user_logged_in()) {
-        wp_redirect('/login/');
-        exit;
-    }
-});
-
-// Проверка доступа к статьям БЗ (epkb_post_type_1) — только для авторизованных
-add_action('template_redirect', function() {
-    if (is_singular('epkb_post_type_1') && !is_user_logged_in()) {
-        wp_redirect(wp_login_url($_SERVER['REQUEST_URI']));
-        exit;
-    }
-});
 
 // ============================================================================
 // 9. КАСТОМНЫЕ ШОРТКОДЫ
@@ -229,8 +213,6 @@ add_shortcode('wp_login_form', function() {
              . esc_html($user->display_name) . '</strong>. '
              . '<a href="' . wp_logout_url(home_url('/')) . '">Выйти</a></div>';
     }
-    
-    $redirect = isset($_GET['redirect']) ? esc_url($_GET['redirect']) : home_url('/knowledge-base/');
     
     ob_start();
     ?>
@@ -268,7 +250,6 @@ add_shortcode('wp_login_form', function() {
                         </div>
                         
                         <div class="mb-3 form-check">
-                            <input type="hidden" name="redirect_to" value="<?php echo esc_attr($redirect); ?>">
                             <label class="form-check-label">
                                 <input type="checkbox" name="rememberme" value="forever"> Запомнить меня
                             </label>
