@@ -201,14 +201,6 @@ add_filter('wp_nav_menu_items', function($items, $args) {
     return $items;
 }, 10, 2);
 
-// Редирект со страницы /login/ на стандартную форму входа WordPress
-add_action('template_redirect', function() {
-    if (is_page('login') && !is_user_logged_in()) {
-        wp_redirect(wp_login_url());
-        exit;
-    }
-});
-
 // ============================================================================
 // 9. КАСТОМНЫЕ ШОРТКОДЫ
 // ============================================================================
