@@ -209,6 +209,14 @@ add_action('template_redirect', function() {
     }
 });
 
+// Проверка доступа к статьям БЗ (epkb_post_type_1)
+add_action('template_redirect', function() {
+    if (is_singular('epkb_post_type_1') && !is_user_logged_in()) {
+        wp_redirect('/login/');
+        exit;
+    }
+});
+
 // ============================================================================
 // 9. КАСТОМНЫЕ ШОРТКОДЫ
 // ============================================================================

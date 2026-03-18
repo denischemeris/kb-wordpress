@@ -39,7 +39,7 @@ $user = wp_get_current_user();
                            placeholder="Поиск по базе знаний..." 
                            name="s"
                            value="<?php echo get_search_query(); ?>">
-                    <input type="hidden" name="post_type" value="kb_article">
+                    <input type="hidden" name="post_type" value="epkb_post_type_1">
                     <button class="btn btn-primary" type="submit">
                         <i class="bi bi-search"></i> Найти
                     </button>
@@ -60,7 +60,7 @@ $user = wp_get_current_user();
     <div class="row mb-5">
         <?php
         $categories = get_terms([
-            'taxonomy' => 'kb_category',
+            'taxonomy' => 'epkb_post_type_1_category',
             'hide_empty' => true,
             'parent' => 0,
         ]);
@@ -87,7 +87,7 @@ $user = wp_get_current_user();
                             <?php
                             // Подкатегории
                             $subcategories = get_terms([
-                                'taxonomy' => 'kb_category',
+                                'taxonomy' => 'epkb_post_type_1_category',
                                 'hide_empty' => true,
                                 'parent' => $category->term_id,
                             ]);
@@ -142,7 +142,7 @@ $user = wp_get_current_user();
             <div class="list-group">
                 <?php
                 $articles = new WP_Query([
-                    'post_type' => 'kb_article',
+                    'post_type' => 'epkb_post_type_1',
                     'posts_per_page' => 10,
                     'post_status' => 'publish',
                     'orderby' => 'date',
@@ -165,7 +165,7 @@ $user = wp_get_current_user();
                                 </small>
                             </div>
                             <?php
-                            $categories = get_the_terms(get_the_ID(), 'kb_category');
+                            $categories = get_the_terms(get_the_ID(), 'epkb_post_type_1_category');
                             if (!empty($categories) && !is_wp_error($categories)) {
                                 echo '<small class="text-muted">';
                                 echo implode(', ', wp_list_pluck($categories, 'name'));
